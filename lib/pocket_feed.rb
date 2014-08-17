@@ -1,30 +1,68 @@
-require "httparty"
-require "rss"
+require "pocket"
+require 'open-uri'
+require 'pp'
 require_relative "bookmark"
 
 class PocketFeed
-  def initialize(username, password)
-    @username = username
-    @password = password
+  def initialize(consumer_key, access_token)
+
+    Pocket.configure do |c|
+      c.consumer_key = consumer_key
+    end
+
+    @access_token = access_token
   end
 
   def feed
+
     @feed ||= begin
-      response = HTTParty.get("http://getpocket.com/users/noniq/feed/read", basic_auth: { username: @username, password: @password })
-      raise "Error loading RSS feed: #{response.body}" unless response.code == 200
-      RSS::Parser.parse(response)
+      client = Pocket.client(:access_token => @access_token)
     end
   end
 
   def bookmarks(since: nil)
-    items = feed.items.dup
-    items.reject!{ |item| item.pubDate < since } if since
+    items = feed.retrieve(state: 'archive', sort: 'oldest', detailType: 'complete')
+
+    the_bookmarks = items['list']
 
     return_items = []
 
-    items.each do |item|
-      tags = item.tags.map { |tag| tag.sub!(' ', '_')}
-      bookmark = Bookmark.new(item.link, item.title, tags)
+    the_bookmarks.each do |item|
+
+      item = item[1]
+
+      #pp item
+
+      bookmark_tags = []
+
+      if item['tags']
+        item['tags'].each do |tag|
+          bookmark_tags << tag[0].gsub(' ', '_')
+        end
+      end
+
+      if item['resolved_url']
+        if item['resolved_url'].empty?
+          url = item['given_url']
+        else
+          url = item['resolved_url']
+        end
+      else
+        url = item['given_url']
+      end
+
+      if item['resolved_title']
+        if item['resolved_title'].empty?
+          title = item['given_title']
+        else
+          title = item['resolved_title']
+        end
+      else
+        title = item['given_title']
+      end
+
+      bookmark = Bookmark.new(url, title, item['excerpt'], bookmark_tags)
+
       return_items << bookmark
     end
 

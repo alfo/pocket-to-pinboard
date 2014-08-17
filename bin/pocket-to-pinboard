@@ -7,7 +7,7 @@ require_relative "../lib/pocket_feed"
 require_relative "../lib/pinboard_client"
 
 def pocket_feed
-  @pocket_feed ||= PocketFeed.new(ENV["POCKET_USERNAME"], ENV["POCKET_PASSWORD"])
+  @pocket_feed ||= PocketFeed.new(ENV["POCKET_CONSUMER_KEY"], ENV["POCKET_USERNAME"], ENV["POCKET_PASSWORD"])
 end
 
 def pinboard_client
@@ -31,7 +31,7 @@ def update_last_run_timestamp
 end
 
 puts "Fetching items added since #{last_run || '(no last run timestamp available)'}."
-bookmarks = pocket_feed.bookmarks(since: last_run)
+bookmarks = pocket_feed.bookmarks#(since: last_run)
 
 if bookmarks.size > 0
   pinboard_client.add_bookmarks(bookmarks)

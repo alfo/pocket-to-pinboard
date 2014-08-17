@@ -1,19 +1,35 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    biffbot (0.0.3)
+      httparty
+      json (~> 1.7.7)
+    faraday (0.8.9)
+      multipart-post (~> 1.2.0)
+    faraday_middleware (0.9.1)
+      faraday (>= 0.7.4, < 0.10)
+    hashie (3.2.0)
     httparty (0.11.0)
       multi_json (~> 1.0)
       multi_xml (>= 0.5.2)
-    multi_json (1.7.9)
+    json (1.7.7)
+    multi_json (1.10.1)
     multi_xml (0.5.5)
+    multipart-post (1.2.0)
     pinboard (0.1.1)
       httparty (= 0.11.0)
+    pocket-ruby (0.0.4)
+      faraday (>= 0.7, < 0.9)
+      faraday_middleware (~> 0.8)
+      hashie (>= 0.4.0)
+      multi_json (~> 1.0, >= 1.0.3)
     redis (3.0.4)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  httparty
-  pinboard (~> 0.1)
+  biffbot
+  pinboard
+  pocket-ruby
   redis (~> 3.0)

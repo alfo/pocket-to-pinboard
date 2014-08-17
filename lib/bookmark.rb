@@ -1,1 +1,1 @@
-Bookmark = Struct.new(:url, :description, :tags)
+Bookmark = Struct.new(:url, :description, :extended, :tags, :dt)
