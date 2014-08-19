@@ -21,7 +21,8 @@ class PocketFeed
   end
 
   def bookmarks(since: nil)
-    items = feed.retrieve(state: 'archive', sort: 'oldest', detailType: 'complete')
+
+    items = feed.retrieve(state: 'archive', sort: 'newest', detailType: 'complete', since: since.to_i)
 
     the_bookmarks = items['list']
 
@@ -30,8 +31,6 @@ class PocketFeed
     the_bookmarks.each do |item|
 
       item = item[1]
-
-      #pp item
 
       bookmark_tags = []
 

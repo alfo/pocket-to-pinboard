@@ -4,7 +4,7 @@ class PinboardClient
   def initialize(username, password, options = {})
     @username = username
     @password = password
-    @options = { replace: false, shared: false }.merge(options)
+    @options = {replace: false, shared: true}.merge(options)
   end
 
   def client
@@ -19,7 +19,7 @@ class PinboardClient
 
   def add_bookmark(bookmark)
     puts "Adding #{bookmark}"
-    client.add(@options.merge(url: bookmark.url, description: bookmark.description, extended: bookmark.extended, shared: 'yes', dt: bookmark.dt, tags: bookmark.tags.join(' ')))
+    client.add(@options.merge(url: bookmark.url, description: bookmark.description, extended: bookmark.extended, dt: bookmark.dt, tags: bookmark.tags.join(' ')))
   rescue Pinboard::Error => e
     if e.message == "item already exists"
       puts "Bookmark already exists, skipping it: #{bookmark.url}"
